@@ -23,12 +23,12 @@ public class Producer {
             producer = new KafkaProducer<>(properties);
         }
 
-        try (Stream<Path> paths = Files.walk(Paths.get(args[1]))) {
+        try (Stream<Path> paths = Files.walk(Paths.get(args[2]))) {
             paths.forEach(filePath -> {
                 if (Files.isRegularFile(filePath)) {
                     try (Stream<String> lines = Files.lines(filePath, Charset.forName("ISO-8859-1"))) {
                         lines.forEach(line -> {
-                            producer.send(new ProducerRecord<>("logstopic", line));
+                            producer.send(new ProducerRecord<>(args[1], line));
                             System.out.println("Line was read from file: " + line);
                         });
                     } catch (IOException ex) {
